@@ -7,6 +7,7 @@ description, preparation steps and timing metadata.
 from hashlib import sha256
 
 from django.core.management.base import BaseCommand, CommandError
+from django.utils.text import slugify
 
 from recipes.models import Ingredient, Recipe, RecipeIngredient
 from recipes.services import NutritionCalculator
@@ -32,6 +33,17 @@ MORE_BATCH_PROFILES = {
 # Their ingredients are deliberately listed here so they remain recognisable
 # recipes instead of, for example, a "sarma" that looks like a potato stew.
 PROFILE_OVERRIDES = {
+    "Proteinski puding": [("Grčki jogurt", 500, "g"), ("Mleko", 350, "g"), ("Ovsene pahuljice", 100, "g"), ("Banana", 250, "g")],
+    "Keks torta": [("Grčki jogurt", 500, "g"), ("Mleko", 350, "g"), ("Ovsene pahuljice", 160, "g"), ("Banana", 250, "g")],
+    "Pita sa jabukama": [("Brašno", 400, "g"), ("Jabuka", 700, "g"), ("Šećer", 100, "g")],
+    "Banana hleb": [("Brašno", 350, "g"), ("Banana", 400, "g"), ("Jaja", 3, "piece"), ("Šećer", 100, "g")],
+    "Kolač od šargarepe": [("Brašno", 350, "g"), ("Šargarepa", 350, "g"), ("Jaja", 3, "piece"), ("Šećer", 120, "g")],
+    "Zdravi mafini": [("Ovsene pahuljice", 220, "g"), ("Banana", 300, "g"), ("Jaja", 3, "piece"), ("Grčki jogurt", 200, "g")],
+    "Koh": [("Jaja", 5, "piece"), ("Mleko", 700, "g"), ("Brašno", 180, "g"), ("Šećer", 140, "g")],
+    "Čokoladni griz": [("Mleko", 700, "g"), ("Brašno", 100, "g"), ("Šećer", 80, "g")],
+    "Cezar salata": [("Piletina", 450, "g"), ("Zelena salata", 250, "g"), ("Paradajz", 250, "g"), ("Sir", 120, "g")],
+    "Cezar salata sa piletinom": [("Piletina", 450, "g"), ("Zelena salata", 250, "g"), ("Paradajz", 250, "g"), ("Sir", 120, "g")],
+    "Pileća cezar salata": [("Piletina", 450, "g"), ("Zelena salata", 250, "g"), ("Paradajz", 250, "g"), ("Sir", 120, "g")],
     "Sarma": [("Mleveno meso", 550, "g"), ("Pirinač", 200, "g"), ("Kupus", 800, "g"), ("Luk", 150, "g")],
     "Punjene paprike": [("Mleveno meso", 550, "g"), ("Pirinač", 200, "g"), ("Paprika", 700, "g"), ("Luk", 150, "g")],
     "Punjene paprike bez mesa": [("Pirinač", 300, "g"), ("Paprika", 700, "g"), ("Tikvica", 300, "g"), ("Luk", 150, "g")],
@@ -52,6 +64,10 @@ PROFILE_OVERRIDES = {
     "Kiseli kupus sa mesom": [("Svinjetina", 650, "g"), ("Kupus", 900, "g"), ("Luk", 180, "g")],
     "Svadbarski kupus": [("Svinjetina", 650, "g"), ("Kupus", 1000, "g"), ("Luk", 180, "g")],
     "Riblji burger": [("Oslić", 600, "g"), ("Hleb", 300, "g"), ("Krompir", 400, "g"), ("Luk", 120, "g")],
+}
+
+EXTRA_INGREDIENTS = {
+    "Zelena salata": ("Povrće", 15, 1, 3, 0, 1),
 }
 
 
@@ -123,6 +139,62 @@ def timing_for(recipe, style):
     return 12, 20
 
 
+def signature_step(recipe):
+    """The recipe-specific action which prevents one generic method per type."""
+    title = normalised_title(recipe)
+    rules = (
+        (("terijaki",), "Pred kraj dodajte sos u stilu terijakija i mešajte samo koliko je potrebno da obloži zalogaje."),
+        (("kari",), "Za kari, kratko zapecite začine pre nego što nalijete tečnost, kako bi jelo dobilo puniji miris."),
+        (("susam",), "Susam dodajte na samom kraju, kada je tiganj sklonjen sa najjače vatre, da ostane aromatičan."),
+        (("medom i senfom",), "Premaz od meda i senfa nanesite tek pred kraj pečenja da se ne karamelizuje prerano."),
+        (("limunom",), "Limun dodajte neposredno pred serviranje kako bi ostao svež, a ne gorak."),
+        (("sosu od pečuraka",), "Pečurke najpre pustite da ispare višak tečnosti, pa tek onda sjedinite sos sa glavnim sastojkom."),
+        (("paradajz sosu",), "Paradajz kuvajte dok se sos malo ne zgusne pre nego što dodate glavni sastojak."),
+        (("rolnice",), "Nadev rasporedite ravnomerno, uvijte čvrsto i završetak rolnice položite nadole pri pečenju."),
+        (("ražnjići",), "Komade poređajte na ražnjiće s malim razmakom, pa ih okrećite da se ispeku sa svih strana."),
+        (("pohovan", "pohovane", "pohovana"), "Za pohovanje, svaki komad prvo uvaljajte u suvi deo, zatim u umućeno jaje i na kraju pažljivo ispecite."),
+        (("pljeskavice", "burger"), "Oblikujte jednake pljeskavice bez preteranog pritiskanja, pa ih pecite dok ne dobiju koricu."),
+        (("ćufte",), "Od smese oblikujte jednake ćufte vlažnim rukama, pa ih kratko zapecite pre završnog kuvanja."),
+        (("šnicle", "krmenadle"), "Meso ispecite u jednoj turi bez pretrpavanja tiganja, kako bi dobilo boju umesto da se kuva u sopstvenom soku."),
+        (("wok",), "Wok ili najširi tiganj dobro zagrejte; sastojke dodajte redom od onih koji se najduže spremaju ka najmekšima."),
+        (("meal prep",), "Gotovo jelo podelite u odvojene posude tek kada se prohladi, kako bi ostalo prijatno i narednog dana."),
+        (("bowl", "činija", "tanjir"), "Komponente rasporedite odvojeno u činiji, a preliv ili začine dodajte tik pred jelo."),
+        (("cezar",), "Za cezar salatu, topli protein položite preko hladne salate neposredno pre serviranja da listovi ostanu hrskavi."),
+        (("grčka salata", "šopska salata", "mediteranska salata"), "Povrće seckajte krupnije i začinite neposredno pred serviranje da ne pusti previše soka."),
+        (("krompir salata",), "Krompir ohladite do mlakog pre sjedinjavanja kako bi zadržao oblik u salati."),
+        (("salata od pasulja",), "Pasulj prethodno dobro ocedite i ohladite, pa ga nežno sjedinite s prelivom da se ne zgnječi."),
+        (("salata od testeninom", "salata sa testeninom"), "Testeninu ohladite i osušite pre mešanja kako preliv ne bi postao vodenast."),
+        (("palačinke",), "Ostavite smesu za palačinke nekoliko minuta da odmori, zatim pecite tanke palačinke na umereno zagrejanom tiganju."),
+        (("mafine",), "Smesu za mafine samo kratko sjedinite, rasporedite do dve trećine kalupa i pecite dok čačkalica ne izađe suva."),
+        (("banana hleb",), "Banane izgnječite viljuškom, suve sastojke umešajte kratko i pecite u kalupu dok sredina ne bude suva na čačkalici."),
+        (("puding",), "Smesu neprekidno mešajte na tihoj vatri dok se ne zgusne, zatim je ohladite pre serviranja."),
+        (("keks torta",), "Slojeve slažite u hladnoj posudi i ostavite najmanje nekoliko sati da keks omekša i torta se stegne."),
+        (("koh",), "Pečen koh prelijte toplim mlekom postepeno, pa ga ostavite da ravnomerno upije tečnost."),
+        (("gomboce",), "Knedle spuštajte u blago ključalu vodu i vadite ih kada isplivaju; tada ih uvaljajte u pripremljeni posip."),
+        (("pita sa jabukama",), "Jabuke kratko ocedite pre slaganja da pita ostane hrskava, a ne vlažna."),
+        (("griz", "sutlijaš", "kaša", "kačamak", "palenta"), "Suv sastojak sipajte postepeno uz stalno mešanje kako se ne bi napravile grudvice."),
+        (("pizza tost",), "Tost kratko zapecite dok sir ne počne da se topi, ali ga ne ostavljajte predugo da hleb ne postane tvrd."),
+        (("quesadilla",), "Tortilju pecite preklopljenu na srednjoj vatri i pažljivo okrenite kada donja strana postane zlatna."),
+        (("wrap", "tortilji", "tortilja"), "Punjenje ohladite minut-dva, savijte bočne strane tortilje ka unutra i čvrsto je zarolajte."),
+        (("sendvič", "tost"), "Hleb kratko zapecite odvojeno, pa sastojke složite neposredno pre serviranja da ostane hrskav."),
+        (("rižoto",), "Tečnost dodajte postepeno uz često mešanje, tako da pirinač postane kremast, ali zadrži oblik zrna."),
+        (("prženi pirinač",), "Koristite ohlađen pirinač i pržite ga na jačoj vatri u manjim turama da ostane rastresit."),
+        (("đuveč",), "Pecite poklopljeno dok pirinač ne omekša, zatim poslednjih nekoliko minuta otklopite da višak tečnosti ispari."),
+        (("sup", "čorb"), "Po potrebi skidajte penu sa površine i kuvajte na tihom ključanju da supa ili čorba ostane bistra."),
+        (("pasulj",), "Pasulj prethodno potopite preko noći kada je suv; kuvajte ga lagano dok zrna ne postanu potpuno mekana."),
+        (("sočivo",), "Sočivo isperite pre kuvanja i dodajte ga kada se aromatično povrće već omekša, jer se brže skuva od pasulja."),
+        (("prebranac",), "Pasulj i luk složite u plitku posudu, pa zapecite dok vrh ne dobije tamniju, slatkastu koricu."),
+        (("sarma",), "Listove kupusa rasporedite tako da otvor bude okrenut nadole; kuvajte tiho da se sarme ne otvore."),
+        (("podvarak", "kupus sa mesom", "svadbarski kupus"), "Kupus i meso pecite poklopljeno dok ne omekšaju, a zatim kratko otklopite da se površina zapeče."),
+        (("file u rerni", "iz rerne", "u rerni", "pečena", "pečeni"), "Rernu zagrejte unapred i proverite deblji deo glavnog sastojka pre vađenja da bude potpuno gotov."),
+        (("oslić", "pastrmka", "losos", "riba"), "Ribu pažljivo prevrnite samo jednom i završite čim se lako razdvaja viljuškom da ne postane suva."),
+    )
+    for needles, text in rules:
+        if has(title, *needles):
+            return text
+    return f"Tokom pripreme proveravajte ukus i teksturu, jer je cilj da {recipe.title.lower()} ostane sočan i uravnotežen."
+
+
 def instructions_for(recipe, profile, ingredients):
     """Create an individual, title-aware preparation that matches the dish type."""
     names = ingredient_names(ingredients)
@@ -132,12 +204,35 @@ def instructions_for(recipe, profile, ingredients):
     rest = ", ".join(names[1:]) or first
     style = style_for(recipe, profile)
     prep = pick(recipe, [
-        f"Operite i pripremite sastojke za {recipe.title.lower()}; sve što se seče pripremite pre početka kuvanja.",
-        f"Za {recipe.title.lower()} pripremite radnu površinu i odmerite {', '.join(names)}.",
-        f"Prvo pripremite {', '.join(names)} kako bi {recipe.title.lower()} tekao bez prekida.",
+        f"Operite i pripremite sastojke za jelo „{recipe.title}“; sve što se seče pripremite pre početka kuvanja.",
+        f"Za jelo „{recipe.title}“ pripremite radnu površinu i odmerite {', '.join(names)}.",
+        f"Prvo pripremite {', '.join(names)} kako bi priprema jela „{recipe.title}“ tekla bez prekida.",
     ])
 
-    if style == "cold":
+    # These recipes need a real, dedicated sequence. Their title is not merely
+    # a variation of a broad profile such as "porridge" or "cold salad".
+    if "proteinski puding" in normalised_title(recipe):
+        steps = [
+            f"Za jelo „{recipe.title}“ izmiksajte {', '.join(names)} dok smesa ne postane potpuno glatka.",
+            "Prebacite smesu u šerpicu i zagrevajte na tihoj vatri uz stalno mešanje, bez jakog ključanja.",
+            "Kada se puding zgusne i obloži kašiku, sipajte ga u čaše i ostavite da se prohladi.",
+            "Pokrijte i hladite najmanje 30 minuta, pa poslužite hladan.",
+        ]
+    elif "palačinke" in normalised_title(recipe):
+        steps = [
+            f"Za jelo „{recipe.title}“ usitnite ili izmiksajte {', '.join(names)} u glatku smesu.",
+            "Ostavite smesu 10 minuta da odmori, dok zagrevate blago podmazan tiganj na srednjoj vatri.",
+            "Sipajte tanki sloj smese, pecite dok se ivice ne odvoje, pa pažljivo okrenite i ispecite drugu stranu.",
+            "Nastavite dok ne potrošite smesu i poslužite palačinke tople.",
+        ]
+    elif "cezar" in normalised_title(recipe):
+        steps = [
+            f"Za jelo „{recipe.title}“ ispecite {first} na umerenoj vatri dok ne bude potpuno pečen, pa ga ostavite 5 minuta da odmori.",
+            "Zelenu salatu operite, dobro osušite i krupno iskidajte kako bi ostala hrskava.",
+            f"U velikoj činiji sjedinite salatu sa preostalim sastojcima: {rest}.",
+            "Narežite topli protein, rasporedite ga preko salate i začinite neposredno pre serviranja.",
+        ]
+    elif style == "cold":
         steps = [
             prep,
             f"Isecite {', '.join(names)} na zalogaje približno iste veličine.",
@@ -235,6 +330,13 @@ def instructions_for(recipe, profile, ingredients):
             f"Začinite po ukusu i poslužite {recipe.title.lower()} toplo.",
         ]
 
+    is_dedicated_method = any(word in normalised_title(recipe) for word in ("proteinski puding", "palačinke", "cezar"))
+
+    # Every non-dedicated method also receives one concrete, dish-specific technique. This is
+    # intentionally separate from the broad cooking-style instructions above.
+    if not is_dedicated_method:
+        steps.insert(1, signature_step(recipe))
+
     # Recipes that genuinely take longer also receive an extra resting/checking
     # step, instead of pretending that they are as simple as a quick toast.
     if has(normalised_title(recipe), "lazanj", "sarma", "gulaš", "svadbarski", "pasulj", "musaka", "punjene", "torta", "gomboce", "podvarak"):
@@ -252,6 +354,15 @@ class Command(BaseCommand):
         added_lines = updated = 0
         for recipe in Recipe.objects.prefetch_related("recipe_ingredients__ingredient"):
             profile = profile_for(recipe)
+            for name, values in EXTRA_INGREDIENTS.items():
+                Ingredient.objects.get_or_create(
+                    name=name,
+                    defaults={
+                        "slug": slugify(name), "category": values[0], "calories_per_100g": values[1],
+                        "protein_per_100g": values[2], "carbs_per_100g": values[3],
+                        "fat_per_100g": values[4], "fiber_per_100g": values[5],
+                    },
+                )
             ingredient_lines = PROFILE_OVERRIDES.get(recipe.title, PROFILES[profile])
             if recipe.title in PROFILE_OVERRIDES:
                 recipe.recipe_ingredients.all().delete()
