@@ -1,0 +1,1 @@
+{% extends "base.html" %}{% block content %}<div class="auth"><h1>Dobro došli nazad</h1><form method="post">{% csrf_token %}{{ form.as_p }}<button>Prijavi se</button></form><p>Nemaš nalog? <a href="/nalog/registracija/">Registruj se</a></p></div>{% endblock %}

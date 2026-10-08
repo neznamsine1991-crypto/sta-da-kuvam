@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: sta-da-kuvam
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate && python manage.py seed_data && python manage.py seed_recipes && python manage.py seed_more_recipes
+    startCommand: gunicorn config.wsgi:application
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
