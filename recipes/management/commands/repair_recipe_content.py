@@ -28,6 +28,32 @@ MORE_BATCH_PROFILES = {
     for title in titles
 }
 
+# These dishes cannot be represented faithfully by a broad category profile.
+# Their ingredients are deliberately listed here so they remain recognisable
+# recipes instead of, for example, a "sarma" that looks like a potato stew.
+PROFILE_OVERRIDES = {
+    "Sarma": [("Mleveno meso", 550, "g"), ("Pirinač", 200, "g"), ("Kupus", 800, "g"), ("Luk", 150, "g")],
+    "Punjene paprike": [("Mleveno meso", 550, "g"), ("Pirinač", 200, "g"), ("Paprika", 700, "g"), ("Luk", 150, "g")],
+    "Punjene paprike bez mesa": [("Pirinač", 300, "g"), ("Paprika", 700, "g"), ("Tikvica", 300, "g"), ("Luk", 150, "g")],
+    "Lazanje sa mesom": [("Mleveno meso", 600, "g"), ("Testenina", 400, "g"), ("Paradajz", 400, "g"), ("Sir", 250, "g"), ("Luk", 150, "g")],
+    "Povrtna lazanja": [("Testenina", 400, "g"), ("Tikvica", 350, "g"), ("Pečurke", 300, "g"), ("Sir", 250, "g"), ("Paradajz", 300, "g")],
+    "Musaka sa mesom": [("Mleveno meso", 550, "g"), ("Krompir", 900, "g"), ("Jaja", 3, "piece"), ("Sir", 180, "g"), ("Luk", 150, "g")],
+    "Musaka od krompira": [("Krompir", 1000, "g"), ("Jaja", 3, "piece"), ("Sir", 220, "g"), ("Luk", 120, "g")],
+    "Povrtna musaka": [("Krompir", 800, "g"), ("Tikvica", 400, "g"), ("Jaja", 3, "piece"), ("Sir", 220, "g"), ("Paradajz", 250, "g")],
+    "Pita sa mesom": [("Brašno", 400, "g"), ("Mleveno meso", 500, "g"), ("Luk", 180, "g"), ("Jaja", 2, "piece")],
+    "Pita sa krompirom": [("Brašno", 400, "g"), ("Krompir", 800, "g"), ("Luk", 180, "g")],
+    "Pita sa sirom": [("Brašno", 400, "g"), ("Sir", 350, "g"), ("Jaja", 3, "piece"), ("Grčki jogurt", 250, "g")],
+    "Pita sa spanaćem": [("Brašno", 400, "g"), ("Spanać", 400, "g"), ("Sir", 250, "g"), ("Jaja", 3, "piece")],
+    "Pita zeljanica": [("Brašno", 400, "g"), ("Spanać", 400, "g"), ("Sir", 250, "g"), ("Jaja", 3, "piece")],
+    "Pita sa povrćem": [("Brašno", 400, "g"), ("Tikvica", 350, "g"), ("Paprika", 250, "g"), ("Sir", 200, "g")],
+    "Gibanica": [("Brašno", 400, "g"), ("Sir", 400, "g"), ("Jaja", 4, "piece"), ("Grčki jogurt", 300, "g")],
+    "Prebranac": [("Pasulj", 500, "g"), ("Luk", 350, "g"), ("Paprika", 200, "g")],
+    "Podvarak": [("Svinjetina", 650, "g"), ("Kupus", 900, "g"), ("Luk", 180, "g")],
+    "Kiseli kupus sa mesom": [("Svinjetina", 650, "g"), ("Kupus", 900, "g"), ("Luk", 180, "g")],
+    "Svadbarski kupus": [("Svinjetina", 650, "g"), ("Kupus", 1000, "g"), ("Luk", 180, "g")],
+    "Riblji burger": [("Oslić", 600, "g"), ("Hleb", 300, "g"), ("Krompir", 400, "g"), ("Luk", 120, "g")],
+}
+
 
 def profile_for(recipe):
     return FIRST_BATCH_PROFILES.get(
@@ -56,6 +82,10 @@ def has(title, *needles):
 
 def style_for(recipe, profile):
     title = normalised_title(recipe)
+    if has(title, "sarma", "punjene paprike"):
+        return "stuffed"
+    if has(title, "lazanj", "musaka"):
+        return "layers"
     if has(title, "salata", "činija", "tanjir"):
         return "cold"
     if has(title, "palač", "ustip", "uštip", "pohovan"):
@@ -147,6 +177,23 @@ def instructions_for(recipe, profile, ingredients):
             "Pecite dok površina ne dobije boju, a sredina ne bude čvrsta; proverite čačkalicom kada je prikladno.",
             f"Ostavite {recipe.title.lower()} 10 minuta pre sečenja ili serviranja kako bi se lepo stegao.",
         ]
+    elif style == "stuffed":
+        steps = [
+            prep,
+            "Pripremite nadjev tako što ćete sjediniti glavni sastojak sa sitno seckanim dodacima i začinima.",
+            "Napunite povrće ili listove kupusa ravnomerno, bez previše punjenja, pa pažljivo složite u šerpu.",
+            "Nalijte toplom vodom do visine punjenja, poklopite i kuvajte lagano dok nadjev i omotač ne omekšaju.",
+            f"Ostavite {recipe.title.lower()} 10 minuta da odmori pre serviranja kako bi zadržao oblik.",
+        ]
+    elif style == "layers":
+        steps = [
+            prep,
+            "Zagrejte rernu na 180°C i pripremite posudu za pečenje.",
+            f"Prvo pripremite {first} sa sastojcima {rest}, tako da svi budu delimično omekšani.",
+            "Ređajte sastojke u ravnim slojevima i završite slojem koji će tokom pečenja napraviti zlatnu koricu.",
+            "Pecite dok sredina ne bude potpuno vruća i čvrsta, a površina lepo zapečena.",
+            f"Ostavite {recipe.title.lower()} 10 minuta pre sečenja da se slojevi stabilizuju.",
+        ]
     elif style == "pan":
         steps = [
             prep,
@@ -205,8 +252,11 @@ class Command(BaseCommand):
         added_lines = updated = 0
         for recipe in Recipe.objects.prefetch_related("recipe_ingredients__ingredient"):
             profile = profile_for(recipe)
+            ingredient_lines = PROFILE_OVERRIDES.get(recipe.title, PROFILES[profile])
+            if recipe.title in PROFILE_OVERRIDES:
+                recipe.recipe_ingredients.all().delete()
             if not recipe.recipe_ingredients.exists():
-                for name, quantity, unit in PROFILES[profile]:
+                for name, quantity, unit in ingredient_lines:
                     ingredient = Ingredient.objects.get(name=name)
                     _, made = RecipeIngredient.objects.get_or_create(
                         recipe=recipe,
