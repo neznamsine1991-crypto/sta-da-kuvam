@@ -68,6 +68,110 @@ PROFILE_OVERRIDES = {
 
 EXTRA_INGREDIENTS = {
     "Zelena salata": ("Povrće", 15, 1, 3, 0, 1),
+    "Tortilja": ("Pekarski proizvodi", 310, 8, 52, 8, 4),
+    "Brokoli": ("Povrće", 34, 3, 7, 0, 3), "Susam": ("Ostalo", 573, 18, 23, 50, 12),
+    "Limun": ("Voće", 29, 1, 9, 0, 3), "Med": ("Ostalo", 304, 0, 82, 0, 0),
+    "Senf": ("Ostalo", 66, 4, 6, 4, 4), "Soja sos": ("Ostalo", 53, 8, 5, 1, 1),
+    "Pastrmka": ("Riba", 148, 20, 0, 6, 0), "Blitva": ("Povrće", 19, 2, 4, 0, 2),
+    "Karfiol": ("Povrće", 25, 2, 5, 0, 2), "Boranija": ("Povrće", 31, 2, 7, 0, 3),
+    "Kuskus": ("Žitarice", 376, 13, 77, 1, 5), "Cvekla": ("Povrće", 43, 2, 10, 0, 3),
+    "Leblebije": ("Mahunarke", 364, 19, 61, 6, 17), "Kinoa": ("Žitarice", 368, 14, 64, 6, 7),
+    "Šunka": ("Meso", 145, 21, 1, 6, 0), "Kajmak": ("Mlečni proizvodi", 700, 3, 3, 75, 0),
+    "Keks": ("Ostalo", 450, 6, 70, 16, 2), "Griz": ("Žitarice", 360, 12, 73, 1, 4),
+    "Kakao": ("Ostalo", 228, 20, 58, 14, 33), "Šljiva": ("Voće", 46, 1, 11, 0, 1),
+}
+
+# Exact ingredient lists for titles which a category profile cannot describe.
+# Amounts are for four portions and intentionally remain simple, home-cooking data.
+TITLE_INGREDIENTS = {
+    "Pirinač sa jajima": [("Pirinač", 400, "g"), ("Jaja", 5, "piece"), ("Luk", 150, "g"), ("Paprika", 200, "g")],
+    "Pečurke sa pirinčem": [("Pečurke", 600, "g"), ("Pirinač", 350, "g"), ("Luk", 150, "g"), ("Šargarepa", 200, "g")],
+    "Kuvani krompir sa sirom": [("Krompir", 1000, "g"), ("Sir", 250, "g"), ("Grčki jogurt", 200, "g")],
+    "Junetina sa pečurkama": [("Junetina", 650, "g"), ("Pečurke", 450, "g"), ("Luk", 150, "g"), ("Krompir", 700, "g")],
+    "Jaja sa šunkom": [("Jaja", 5, "piece"), ("Šunka", 250, "g"), ("Sir", 120, "g"), ("Paradajz", 200, "g")],
+    "Pohovana piletina": [("Piletina", 700, "g"), ("Jaja", 3, "piece"), ("Brašno", 200, "g"), ("Krompir", 700, "g")],
+    "Povrće iz rerne": [("Tikvica", 400, "g"), ("Paprika", 300, "g"), ("Krompir", 700, "g"), ("Paradajz", 300, "g")],
+    "Povrtni wok": [("Tikvica", 350, "g"), ("Paprika", 300, "g"), ("Šargarepa", 250, "g"), ("Pečurke", 250, "g")],
+    "Pileće rolnice sa sirom": [("Piletina", 650, "g"), ("Sir", 220, "g"), ("Spanać", 200, "g"), ("Krompir", 700, "g")],
+    "Pileći file u rerni": [("Piletina", 700, "g"), ("Krompir", 800, "g"), ("Paprika", 250, "g"), ("Tikvica", 250, "g")],
+    "Pileći ražnjići": [("Piletina", 650, "g"), ("Paprika", 300, "g"), ("Tikvica", 300, "g"), ("Luk", 180, "g")],
+    "Piletina u paradajz sosu": [("Piletina", 600, "g"), ("Paradajz", 500, "g"), ("Luk", 150, "g"), ("Testenina", 350, "g")],
+    "Pileća salata": [("Piletina", 450, "g"), ("Zelena salata", 250, "g"), ("Paradajz", 250, "g"), ("Paprika", 200, "g")],
+    "Sendvič sa piletinom": [("Hleb", 350, "g"), ("Piletina", 400, "g"), ("Sir", 150, "g"), ("Paradajz", 200, "g")],
+    "Tuna salata": [("Tunjevina", 350, "g"), ("Zelena salata", 250, "g"), ("Paradajz", 250, "g"), ("Paprika", 200, "g")],
+    "Krompir salata": [("Krompir", 900, "g"), ("Luk", 150, "g"), ("Paprika", 200, "g"), ("Zelena salata", 150, "g")],
+    "Kupus salata": [("Kupus", 800, "g"), ("Šargarepa", 200, "g"), ("Paradajz", 200, "g")],
+    "Salata sa grilovanim povrćem": [("Tikvica", 350, "g"), ("Paprika", 300, "g"), ("Paradajz", 300, "g"), ("Sir", 150, "g")],
+    "Svinjetina sa kupusom": [("Svinjetina", 650, "g"), ("Kupus", 800, "g"), ("Luk", 150, "g")],
+    "Svinjetina sa povrćem": [("Svinjetina", 650, "g"), ("Paprika", 250, "g"), ("Tikvica", 300, "g"), ("Šargarepa", 200, "g")],
+    "Svinjetina u sosu od pečuraka": [("Svinjetina", 650, "g"), ("Pečurke", 450, "g"), ("Mleko", 250, "g"), ("Krompir", 700, "g")],
+    "Svinjske rolnice": [("Svinjetina", 650, "g"), ("Sir", 200, "g"), ("Spanać", 200, "g"), ("Krompir", 700, "g")],
+    "Tikvice sa sirom": [("Tikvica", 700, "g"), ("Sir", 250, "g"), ("Jaja", 3, "piece"), ("Paradajz", 250, "g")],
+    "Piletina u tortilji": [("Piletina", 500, "g"), ("Tortilja", 4, "piece"), ("Sir", 150, "g"), ("Paprika", 250, "g")],
+    "Proteinska tortilja": [("Tortilja", 4, "piece"), ("Piletina", 450, "g"), ("Grčki jogurt", 200, "g"), ("Spanać", 150, "g")],
+    "Tuna wrap": [("Tortilja", 4, "piece"), ("Tunjevina", 350, "g"), ("Zelena salata", 200, "g"), ("Paradajz", 250, "g")],
+    "Pileći wrap": [("Tortilja", 4, "piece"), ("Piletina", 450, "g"), ("Zelena salata", 200, "g"), ("Paradajz", 250, "g")],
+    "Quesadilla sa piletinom": [("Tortilja", 4, "piece"), ("Piletina", 450, "g"), ("Sir", 200, "g"), ("Paprika", 250, "g")],
+    "Tuna punjene paprike": [("Tunjevina", 350, "g"), ("Paprika", 700, "g"), ("Pirinač", 250, "g"), ("Luk", 120, "g")],
+    "Tuna rižoto": [("Tunjevina", 350, "g"), ("Pirinač", 300, "g"), ("Paradajz", 250, "g"), ("Luk", 120, "g")],
+    "Tuna rice bowl": [("Tunjevina", 350, "g"), ("Pirinač", 300, "g"), ("Spanać", 200, "g"), ("Paradajz", 250, "g")],
+    "Tuna salata sa jajima": [("Tunjevina", 350, "g"), ("Jaja", 4, "piece"), ("Zelena salata", 200, "g"), ("Paradajz", 250, "g")],
+    "Losos sa povrćem": [("Losos", 600, "g"), ("Brokoli", 300, "g"), ("Tikvica", 300, "g"), ("Šargarepa", 200, "g")],
+    "Losos salata": [("Losos", 500, "g"), ("Zelena salata", 250, "g"), ("Paradajz", 250, "g"), ("Spanać", 150, "g")],
+    "Pastrmka iz rerne": [("Pastrmka", 700, "g"), ("Krompir", 800, "g"), ("Limun", 120, "g")],
+    "Pastrmka sa krompirom": [("Pastrmka", 700, "g"), ("Krompir", 800, "g"), ("Blitva", 250, "g")],
+    "Riba sa blitvom": [("Oslić", 700, "g"), ("Blitva", 350, "g"), ("Krompir", 700, "g")],
+    "Riblja čorba": [("Oslić", 700, "g"), ("Luk", 180, "g"), ("Paprika", 250, "g"), ("Šargarepa", 200, "g")],
+    "Oslić u paradajz sosu": [("Oslić", 700, "g"), ("Paradajz", 500, "g"), ("Luk", 150, "g"), ("Krompir", 700, "g")],
+    "Piletina sa brokolijem": [("Piletina", 600, "g"), ("Brokoli", 450, "g"), ("Pirinač", 300, "g")],
+    "Piletina sa graškom": [("Piletina", 600, "g"), ("Grašak", 500, "g"), ("Šargarepa", 200, "g"), ("Luk", 150, "g")],
+    "Piletina sa sočivom": [("Piletina", 600, "g"), ("Sočivo", 350, "g"), ("Šargarepa", 200, "g"), ("Luk", 150, "g")],
+    "Piletina sa spanaćem": [("Piletina", 600, "g"), ("Spanać", 350, "g"), ("Pirinač", 300, "g")],
+    "Piletina sa susamom": [("Piletina", 600, "g"), ("Susam", 60, "g"), ("Paprika", 250, "g"), ("Pirinač", 300, "g")],
+    "Piletina sa limunom": [("Piletina", 600, "g"), ("Limun", 150, "g"), ("Krompir", 800, "g"), ("Tikvica", 250, "g")],
+    "Piletina sa medom i senfom": [("Piletina", 600, "g"), ("Med", 50, "g"), ("Senf", 50, "g"), ("Krompir", 800, "g")],
+    "Piletina terijaki": [("Piletina", 600, "g"), ("Soja sos", 80, "g"), ("Paprika", 250, "g"), ("Pirinač", 300, "g")],
+    "Piletina u sosu od pečuraka": [("Piletina", 600, "g"), ("Pečurke", 450, "g"), ("Mleko", 250, "g"), ("Pirinač", 300, "g")],
+    "Brzi pileći wok": [("Piletina", 500, "g"), ("Paprika", 250, "g"), ("Tikvica", 250, "g"), ("Pirinač", 250, "g")],
+    "Pileći kari": [("Piletina", 600, "g"), ("Paprika", 250, "g"), ("Šargarepa", 200, "g"), ("Pirinač", 300, "g")],
+    "Pileća supa sa rezancima": [("Piletina", 500, "g"), ("Testenina", 180, "g"), ("Šargarepa", 200, "g"), ("Luk", 150, "g")],
+    "Juneći rižoto": [("Junetina", 600, "g"), ("Pirinač", 300, "g"), ("Pečurke", 250, "g"), ("Luk", 150, "g")],
+    "Juneći wok": [("Junetina", 600, "g"), ("Paprika", 250, "g"), ("Tikvica", 250, "g"), ("Pirinač", 250, "g")],
+    "Grčki jogurt proteinska činija": [("Grčki jogurt", 600, "g"), ("Ovsene pahuljice", 160, "g"), ("Banana", 250, "g"), ("Jabuka", 250, "g")],
+    "Jaja i sir fit tanjir": [("Jaja", 5, "piece"), ("Sir", 180, "g"), ("Paradajz", 250, "g"), ("Spanać", 150, "g")],
+    "Junetina fit tanjir": [("Junetina", 600, "g"), ("Brokoli", 300, "g"), ("Krompir", 700, "g")],
+    "Ćuretina sa tikvicama": [("Ćuretina", 600, "g"), ("Tikvica", 400, "g"), ("Paprika", 250, "g"), ("Pirinač", 250, "g")],
+    "Ćureće ćufte": [("Ćuretina", 600, "g"), ("Jaja", 2, "piece"), ("Luk", 150, "g"), ("Paradajz", 350, "g")],
+    "Boranija sa krompirom": [("Boranija", 700, "g"), ("Krompir", 700, "g"), ("Luk", 150, "g"), ("Šargarepa", 200, "g")],
+    "Karfiol iz rerne": [("Karfiol", 800, "g"), ("Sir", 200, "g"), ("Jaja", 3, "piece")],
+    "Krompir sa spanaćem": [("Krompir", 900, "g"), ("Spanać", 350, "g"), ("Sir", 150, "g")],
+    "Povrtni kuskus": [("Kuskus", 350, "g"), ("Paprika", 250, "g"), ("Tikvica", 300, "g"), ("Šargarepa", 200, "g")],
+    "Pohovane tikvice": [("Tikvica", 800, "g"), ("Jaja", 3, "piece"), ("Brašno", 180, "g"), ("Sir", 150, "g")],
+    "Povrtne pljeskavice": [("Tikvica", 400, "g"), ("Šargarepa", 300, "g"), ("Jaja", 3, "piece"), ("Ovsene pahuljice", 160, "g")],
+    "Krem čorba od pečuraka": [("Pečurke", 600, "g"), ("Krompir", 400, "g"), ("Luk", 150, "g"), ("Mleko", 250, "g")],
+    "Pasta sa sirom": [("Testenina", 400, "g"), ("Sir", 250, "g"), ("Mleko", 250, "g")],
+    "Pizza tost": [("Hleb", 350, "g"), ("Paradajz", 300, "g"), ("Sir", 250, "g"), ("Šunka", 200, "g")],
+    "Tost sa sirom i paradajzom": [("Hleb", 350, "g"), ("Sir", 220, "g"), ("Paradajz", 300, "g")],
+    "Sendvič sa jajima": [("Hleb", 350, "g"), ("Jaja", 5, "piece"), ("Sir", 120, "g"), ("Paradajz", 200, "g")],
+    "Proteinski sendvič": [("Hleb", 350, "g"), ("Piletina", 400, "g"), ("Grčki jogurt", 150, "g"), ("Spanać", 150, "g")],
+    "Prženi pirinač": [("Pirinač", 400, "g"), ("Jaja", 4, "piece"), ("Paprika", 200, "g"), ("Grašak", 250, "g")],
+    "Brzi rižoto": [("Pirinač", 350, "g"), ("Pečurke", 250, "g"), ("Paradajz", 250, "g"), ("Sir", 150, "g")],
+    "Grašak sa mesom": [("Mleveno meso", 500, "g"), ("Grašak", 600, "g"), ("Krompir", 600, "g"), ("Šargarepa", 200, "g")],
+    "Domaća supa sa knedlama": [("Piletina", 500, "g"), ("Šargarepa", 250, "g"), ("Luk", 150, "g"), ("Brašno", 120, "g"), ("Jaja", 2, "piece")],
+    "Kačamak sa kajmakom": [("Kukuruzno brašno", 300, "g"), ("Kajmak", 250, "g"), ("Sir", 150, "g")],
+    "Gomboce sa šljivama": [("Krompir", 800, "g"), ("Brašno", 300, "g"), ("Šljiva", 500, "g"), ("Šećer", 100, "g")],
+    "Uštipci": [("Brašno", 400, "g"), ("Mleko", 300, "g"), ("Jaja", 2, "piece"), ("Sir", 180, "g")],
+    "Griz na mleku": [("Griz", 160, "g"), ("Mleko", 800, "g"), ("Šećer", 100, "g")],
+    "Sutlijaš": [("Pirinač", 250, "g"), ("Mleko", 900, "g"), ("Šećer", 120, "g")],
+    "Čokoladni griz": [("Griz", 160, "g"), ("Mleko", 800, "g"), ("Kakao", 50, "g"), ("Šećer", 100, "g")],
+    "Keks torta": [("Keks", 500, "g"), ("Mleko", 500, "g"), ("Grčki jogurt", 400, "g"), ("Banana", 300, "g")],
+    "Ovseni kolač sa jabukom": [("Ovsene pahuljice", 250, "g"), ("Jabuka", 500, "g"), ("Jaja", 3, "piece"), ("Grčki jogurt", 200, "g")],
+    "Voćna salata": [("Banana", 300, "g"), ("Jabuka", 350, "g"), ("Grčki jogurt", 250, "g")],
+    "Salata od cvekle": [("Cvekla", 700, "g"), ("Sir", 180, "g"), ("Zelena salata", 150, "g")],
+    "Salata od leblebija": [("Leblebije", 500, "g"), ("Paradajz", 300, "g"), ("Paprika", 200, "g"), ("Sir", 150, "g")],
+    "Salata od pasulja": [("Pasulj", 500, "g"), ("Paprika", 250, "g"), ("Luk", 120, "g"), ("Paradajz", 250, "g")],
+    "Salata sa kinoom": [("Kinoa", 300, "g"), ("Paradajz", 300, "g"), ("Paprika", 200, "g"), ("Sir", 150, "g")],
+    "Salata sa testeninom": [("Testenina", 350, "g"), ("Paradajz", 300, "g"), ("Paprika", 200, "g"), ("Sir", 150, "g")],
 }
 
 
@@ -94,6 +198,36 @@ def ingredient_names(ingredients):
 
 def has(title, *needles):
     return any(needle in title for needle in needles)
+
+
+def required_ingredients_for_title(recipe):
+    """Minimum name-to-ingredient contract used to catch profile mistakes."""
+    title = normalised_title(recipe)
+    requirements = []
+    checks = (
+        (("piletina", "pileći", "pileća"), "Piletina"),
+        (("junetina", "juneći", "juneća", "goveđi", "beef"), "Junetina"),
+        (("svinjetina", "svinjski", "svinjske", "krmenadle"), "Svinjetina"),
+        (("ćuretina", "ćureći", "ćureće"), "Ćuretina"),
+        (("tuna", "tunjevin"), "Tunjevina"),
+        (("losos",), "Losos"), (("pastrmka",), "Pastrmka"),
+        (("oslić",), "Oslić"), (("tortilj", "wrap", "quesadilla"), "Tortilja"),
+        (("brokoli",), "Brokoli"), (("spanać",), "Spanać"), (("grašak",), "Grašak"),
+        (("sočivo",), "Sočivo"), (("pečurk",), "Pečurke"), (("tikvic",), "Tikvica"),
+        (("karfiol",), "Karfiol"), (("boranija",), "Boranija"), (("kuskus",), "Kuskus"),
+        (("cvekl",), "Cvekla"), (("leblebij",), "Leblebije"), (("kino",), "Kinoa"),
+        (("kupus", "sarma", "podvarak"), "Kupus"), (("krompir",), "Krompir"),
+        (("pirinač", "rižoto", "rice", "đuveč", "sutlijaš"), "Pirinač"),
+        (("testen", "pasta", "špaget", "lazanj"), "Testenina"),
+        (("palačinke",), "Jaja"), (("omlet", "jaja"), "Jaja"),
+        (("sir", "gibanica"), "Sir"), (("kačamak", "palenta", "proja"), "Kukuruzno brašno"),
+        (("ovsena",), "Ovsene pahuljice"), (("puding",), "Grčki jogurt"),
+        (("jabuk",), "Jabuka"), (("banana",), "Banana"), (("šljiv",), "Šljiva"),
+    )
+    for needles, ingredient in checks:
+        if has(title, *needles):
+            requirements.append(ingredient)
+    return requirements
 
 
 def style_for(recipe, profile):
@@ -352,20 +486,21 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         added_lines = updated = 0
+        for name, values in EXTRA_INGREDIENTS.items():
+            Ingredient.objects.get_or_create(
+                name=name,
+                defaults={
+                    "slug": slugify(name), "category": values[0], "calories_per_100g": values[1],
+                    "protein_per_100g": values[2], "carbs_per_100g": values[3],
+                    "fat_per_100g": values[4], "fiber_per_100g": values[5],
+                },
+            )
         for recipe in Recipe.objects.prefetch_related("recipe_ingredients__ingredient"):
             profile = profile_for(recipe)
-            for name, values in EXTRA_INGREDIENTS.items():
-                Ingredient.objects.get_or_create(
-                    name=name,
-                    defaults={
-                        "slug": slugify(name), "category": values[0], "calories_per_100g": values[1],
-                        "protein_per_100g": values[2], "carbs_per_100g": values[3],
-                        "fat_per_100g": values[4], "fiber_per_100g": values[5],
-                    },
-                )
-            ingredient_lines = PROFILE_OVERRIDES.get(recipe.title, PROFILES[profile])
-            if recipe.title in PROFILE_OVERRIDES:
-                recipe.recipe_ingredients.all().delete()
+            ingredient_lines = TITLE_INGREDIENTS.get(recipe.title, PROFILE_OVERRIDES.get(recipe.title, PROFILES[profile]))
+            # The command owns generated data, so rewrite it fully. This avoids
+            # stale category-profile ingredients remaining on a renamed dish.
+            recipe.recipe_ingredients.all().delete()
             if not recipe.recipe_ingredients.exists():
                 for name, quantity, unit in ingredient_lines:
                     ingredient = Ingredient.objects.get(name=name)
@@ -376,6 +511,12 @@ class Command(BaseCommand):
                     )
                     added_lines += int(made)
             lines = list(recipe.recipe_ingredients.select_related("ingredient"))
+            present = {line.ingredient.name for line in lines}
+            missing = [name for name in required_ingredients_for_title(recipe) if name not in present]
+            if missing:
+                raise CommandError(
+                    f"Naziv i sastojci nisu usklađeni za '{recipe.title}': nedostaje {', '.join(missing)}"
+                )
             recipe.instructions = instructions_for(recipe, profile, lines)
             recipe.description = (
                 f"{recipe.title} je domaći recept sa sastojcima dostupnim u Srbiji, "
