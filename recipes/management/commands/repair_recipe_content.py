@@ -79,6 +79,12 @@ EXTRA_INGREDIENTS = {
     "Šunka": ("Meso", 145, 21, 1, 6, 0), "Kajmak": ("Mlečni proizvodi", 700, 3, 3, 75, 0),
     "Keks": ("Ostalo", 450, 6, 70, 16, 2), "Griz": ("Žitarice", 360, 12, 73, 1, 4),
     "Kakao": ("Ostalo", 228, 20, 58, 14, 33), "Šljiva": ("Voće", 46, 1, 11, 0, 1),
+    "So": ("Začini", 0, 0, 0, 0, 0), "Biber": ("Začini", 251, 10, 64, 3, 25),
+    "Beli luk": ("Povrće", 149, 6, 33, 1, 2), "Aleva paprika": ("Začini", 282, 14, 54, 13, 35),
+    "Lovorov list": ("Začini", 313, 8, 75, 8, 26), "Prašak za pecivo": ("Ostalo", 53, 0, 28, 0, 0),
+    "Vanila": ("Začini", 288, 0, 13, 0, 0), "Majonez": ("Ostalo", 680, 1, 1, 75, 0),
+    "Slanina": ("Meso", 541, 37, 1, 42, 0), "Maslinovo ulje": ("Ulje", 884, 0, 0, 100, 0),
+    "Cimet": ("Začini", 247, 4, 81, 1, 53),
 }
 
 # Exact ingredient lists for titles which a category profile cannot describe.
@@ -228,6 +234,62 @@ def required_ingredients_for_title(recipe):
         if has(title, *needles):
             requirements.append(ingredient)
     return requirements
+
+
+def completed_ingredient_lines(recipe, profile, main_lines):
+    """Add sensible pantry ingredients that used to be missing from every list."""
+    title = normalised_title(recipe)
+    present = {name for name, _, _ in main_lines}
+    additions = []
+
+    def add(name, quantity, unit="g"):
+        if name not in present:
+            additions.append((name, quantity, unit))
+            present.add(name)
+
+    sweet = has(
+        title, "kolač", "torta", "mafin", "koh", "palač", "griz", "sutlijaš", "puding", "hleb",
+        "gomboce", "uštipci", "pita sa jabuk", "voćna salata", "ovsena kaša", "jogurt sa voćem",
+        "proteinska ovsena", "grčki jogurt proteinska činija",
+    )
+    salad = "salata" in title
+    soup_or_stew = has(title, "supa", "čorba", "gulaš", "paprikaš", "pasulj", "sočivo", "sarma", "podvarak", "kupus")
+
+    if sweet:
+        add("So", 2)
+        add("Cimet", 3)
+        if "pita sa jabuk" in title:
+            add("Maslinovo ulje", 80)
+            add("Prašak za pecivo", 8)
+        if has(title, "kolač", "mafin", "hleb", "koh", "palač", "uštipci"):
+            add("Prašak za pecivo", 10)
+        if has(title, "griz", "sutlijaš", "puding", "koh", "torta"):
+            add("Vanila", 5)
+    elif salad:
+        add("Maslinovo ulje", 30)
+        add("Limun", 60)
+        add("So", 5)
+        add("Biber", 2)
+        if "cezar" in title:
+            add("Hleb", 120)
+            add("Majonez", 100)
+            add("Beli luk", 10)
+            add("Slanina", 120)
+    elif soup_or_stew:
+        add("Maslinovo ulje", 30)
+        add("So", 8)
+        add("Biber", 3)
+        add("Beli luk", 12)
+        add("Aleva paprika", 8)
+        if has(title, "sarma", "pasulj", "sočivo", "gulaš", "paprikaš", "kupus"):
+            add("Lovorov list", 2, "piece")
+    else:
+        add("Maslinovo ulje", 25)
+        add("So", 6)
+        add("Biber", 3)
+        if not has(title, "tost", "sendvič", "wrap", "tortilj", "bowl", "činija", "tanjir"):
+            add("Beli luk", 10)
+    return main_lines + additions
 
 
 def style_for(recipe, profile):
@@ -497,7 +559,8 @@ class Command(BaseCommand):
             )
         for recipe in Recipe.objects.prefetch_related("recipe_ingredients__ingredient"):
             profile = profile_for(recipe)
-            ingredient_lines = TITLE_INGREDIENTS.get(recipe.title, PROFILE_OVERRIDES.get(recipe.title, PROFILES[profile]))
+            main_lines = TITLE_INGREDIENTS.get(recipe.title, PROFILE_OVERRIDES.get(recipe.title, PROFILES[profile]))
+            ingredient_lines = completed_ingredient_lines(recipe, profile, main_lines)
             # The command owns generated data, so rewrite it fully. This avoids
             # stale category-profile ingredients remaining on a renamed dish.
             recipe.recipe_ingredients.all().delete()
