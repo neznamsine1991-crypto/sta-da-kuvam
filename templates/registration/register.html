@@ -1,1 +1,22 @@
-{% extends "base.html" %}{% block content %}<div class="auth"><h1>Napravi nalog</h1><p>Sačuvaj omiljene recepte i napravi svoju listu za kupovinu.</p><form method="post" novalidate>{% csrf_token %}{% if form.non_field_errors %}<div class="form-errors">{{ form.non_field_errors }}</div>{% endif %}{% for field in form %}<p><label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{% if field.help_text %}<small>{{ field.help_text }}</small>{% endif %}{% for error in field.errors %}<span class="field-error">{{ error }}</span>{% endfor %}</p>{% endfor %}<button type="submit">Napravi nalog</button></form><p>Već imaš nalog? <a href="/nalog/login/">Prijavi se</a></p></div>{% endblock %}
+{% extends "base.html" %}
+{% block content %}
+<div class="auth auth-enter">
+  <p class="eyebrow">BRZO I JEDNOSTAVNO</p>
+  <h1>Napravi nalog</h1>
+  <p>Potrebni su samo ime i lozinka.</p>
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% if form.non_field_errors %}<div class="form-errors">{{ form.non_field_errors }}</div>{% endif %}
+    {% for field in form %}
+      <p>
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+        {% if field.help_text %}<small>{{ field.help_text }}</small>{% endif %}
+        {% for error in field.errors %}<span class="field-error">{{ error }}</span>{% endfor %}
+      </p>
+    {% endfor %}
+    <button class="register-button" type="submit">Napravi nalog <span aria-hidden="true">→</span></button>
+  </form>
+  <p class="auth-footer">Već imaš nalog? <a href="/nalog/login/">Prijavi se</a></p>
+</div>
+{% endblock %}
