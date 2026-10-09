@@ -85,11 +85,23 @@ EXTRA_INGREDIENTS = {
     "Vanila": ("Začini", 288, 0, 13, 0, 0), "Majonez": ("Ostalo", 680, 1, 1, 75, 0),
     "Slanina": ("Meso", 541, 37, 1, 42, 0), "Maslinovo ulje": ("Ulje", 884, 0, 0, 100, 0),
     "Cimet": ("Začini", 247, 4, 81, 1, 53),
+    "Voda": ("Ostalo", 0, 0, 0, 0, 0), "Pavlaka": ("Mlečni proizvodi", 193, 3, 4, 19, 0),
+    "Sirće": ("Ostalo", 18, 0, 1, 0, 0), "Origano": ("Začini", 265, 9, 69, 4, 43),
+    "Peršun": ("Začini", 36, 3, 6, 1, 3), "Parmezan": ("Mlečni proizvodi", 431, 38, 4, 29, 0),
+    "Suvi začin": ("Začini", 150, 5, 25, 3, 5), "Čokolada": ("Ostalo", 546, 5, 61, 31, 7),
+    "Prezle": ("Pekarski proizvodi", 395, 13, 72, 5, 5),
+    "Kari": ("Začini", 325, 14, 56, 14, 53),
 }
 
 # Exact ingredient lists for titles which a category profile cannot describe.
 # Amounts are for four portions and intentionally remain simple, home-cooking data.
 TITLE_INGREDIENTS = {
+    "Sarma": [("Mleveno meso", 600, "g"), ("Kupus", 1200, "g"), ("Pirinač", 180, "g"), ("Luk", 250, "g"), ("Šargarepa", 150, "g"), ("Slanina", 150, "g"), ("Jaja", 1, "piece"), ("Beli luk", 15, "g"), ("Maslinovo ulje", 40, "g"), ("Aleva paprika", 10, "g"), ("Lovorov list", 2, "piece"), ("Brašno", 20, "g"), ("So", 8, "g"), ("Biber", 4, "g"), ("Voda", 1500, "ml")],
+    "Musaka sa mesom": [("Krompir", 1000, "g"), ("Mleveno meso", 500, "g"), ("Luk", 180, "g"), ("Beli luk", 12, "g"), ("Šargarepa", 150, "g"), ("Mleko", 300, "ml"), ("Jaja", 3, "piece"), ("Maslinovo ulje", 35, "g"), ("So", 8, "g"), ("Biber", 4, "g")],
+    "Cezar salata": [("Piletina", 500, "g"), ("Zelena salata", 350, "g"), ("Hleb", 180, "g"), ("Slanina", 120, "g"), ("Parmezan", 80, "g"), ("Jaja", 3, "piece"), ("Beli luk", 12, "g"), ("Majonez", 120, "g"), ("Pavlaka", 150, "g"), ("Senf", 15, "g"), ("Limun", 80, "g"), ("Maslinovo ulje", 40, "g"), ("So", 5, "g"), ("Biber", 3, "g")],
+    "Cezar salata sa piletinom": [("Piletina", 500, "g"), ("Zelena salata", 350, "g"), ("Hleb", 180, "g"), ("Slanina", 120, "g"), ("Parmezan", 80, "g"), ("Jaja", 3, "piece"), ("Beli luk", 12, "g"), ("Majonez", 120, "g"), ("Pavlaka", 150, "g"), ("Senf", 15, "g"), ("Limun", 80, "g"), ("Maslinovo ulje", 40, "g"), ("So", 5, "g"), ("Biber", 3, "g")],
+    "Pileća cezar salata": [("Piletina", 500, "g"), ("Zelena salata", 350, "g"), ("Hleb", 180, "g"), ("Slanina", 120, "g"), ("Parmezan", 80, "g"), ("Jaja", 3, "piece"), ("Beli luk", 12, "g"), ("Majonez", 120, "g"), ("Pavlaka", 150, "g"), ("Senf", 15, "g"), ("Limun", 80, "g"), ("Maslinovo ulje", 40, "g"), ("So", 5, "g"), ("Biber", 3, "g")],
+    "Čokoladni griz": [("Mleko", 1000, "ml"), ("Griz", 160, "g"), ("Šećer", 120, "g"), ("Čokolada", 100, "g"), ("Vanila", 5, "g")],
     "Pirinač sa jajima": [("Pirinač", 400, "g"), ("Jaja", 5, "piece"), ("Luk", 150, "g"), ("Paprika", 200, "g")],
     "Pečurke sa pirinčem": [("Pečurke", 600, "g"), ("Pirinač", 350, "g"), ("Luk", 150, "g"), ("Šargarepa", 200, "g")],
     "Kuvani krompir sa sirom": [("Krompir", 1000, "g"), ("Sir", 250, "g"), ("Grčki jogurt", 200, "g")],
@@ -169,7 +181,6 @@ TITLE_INGREDIENTS = {
     "Uštipci": [("Brašno", 400, "g"), ("Mleko", 300, "g"), ("Jaja", 2, "piece"), ("Sir", 180, "g")],
     "Griz na mleku": [("Griz", 160, "g"), ("Mleko", 800, "g"), ("Šećer", 100, "g")],
     "Sutlijaš": [("Pirinač", 250, "g"), ("Mleko", 900, "g"), ("Šećer", 120, "g")],
-    "Čokoladni griz": [("Griz", 160, "g"), ("Mleko", 800, "g"), ("Kakao", 50, "g"), ("Šećer", 100, "g")],
     "Keks torta": [("Keks", 500, "g"), ("Mleko", 500, "g"), ("Grčki jogurt", 400, "g"), ("Banana", 300, "g")],
     "Ovseni kolač sa jabukom": [("Ovsene pahuljice", 250, "g"), ("Jabuka", 500, "g"), ("Jaja", 3, "piece"), ("Grčki jogurt", 200, "g")],
     "Voćna salata": [("Banana", 300, "g"), ("Jabuka", 350, "g"), ("Grčki jogurt", 250, "g")],
@@ -225,6 +236,9 @@ def required_ingredients_for_title(recipe):
         (("kupus", "sarma", "podvarak"), "Kupus"), (("krompir",), "Krompir"),
         (("pirinač", "rižoto", "rice", "đuveč", "sutlijaš"), "Pirinač"),
         (("testen", "pasta", "špaget", "lazanj"), "Testenina"),
+        (("paprikaš", "gulaš"), "Paprika"), (("kari",), "Kari"),
+        (("pohovan", "pohovane", "pohovana"), "Prezle"),
+        (("burger", "sendvič", "tost"), "Hleb"),
         (("palačinke",), "Jaja"), (("omlet", "jaja"), "Jaja"),
         (("sir", "gibanica"), "Sir"), (("kačamak", "palenta", "proja"), "Kukuruzno brašno"),
         (("ovsena",), "Ovsene pahuljice"), (("puding",), "Grčki jogurt"),
@@ -246,6 +260,19 @@ def completed_ingredient_lines(recipe, profile, main_lines):
         if name not in present:
             additions.append((name, quantity, unit))
             present.add(name)
+
+    # The exact named component belongs in the recipe even when an older broad
+    # profile did not know about it (for example, breadcrumbs in a breaded dish).
+    named_components = (
+        (("paprikaš", "gulaš"), "Paprika", 200, "g"),
+        (("paprikaš", "gulaš"), "Aleva paprika", 8, "g"),
+        (("kari",), "Kari", 8, "g"),
+        (("pohovan", "pohovane", "pohovana"), "Prezle", 180, "g"),
+        (("burger", "sendvič", "tost"), "Hleb", 300, "g"),
+    )
+    for words, name, quantity, unit in named_components:
+        if has(title, *words):
+            add(name, quantity, unit)
 
     sweet = has(
         title, "kolač", "torta", "mafin", "koh", "palač", "griz", "sutlijaš", "puding", "hleb",
@@ -289,6 +316,36 @@ def completed_ingredient_lines(recipe, profile, main_lines):
         add("Biber", 3)
         if not has(title, "tost", "sendvič", "wrap", "tortilj", "bowl", "činija", "tanjir"):
             add("Beli luk", 10)
+
+    # Additional technique-dependent ingredients.  These make broadly named
+    # recipes cookable without inventing an unrelated main component.
+    if has(title, "supa", "čorba"):
+        add("Šargarepa", 200)
+        add("Voda", 1500, "ml")
+        add("Peršun", 15)
+    if has(title, "faširane", "ćufte", "pljeskavice", "burger"):
+        add("Jaja", 1, "piece")
+        add("Prezle", 100)
+    if has(title, "pohovan", "pohovane", "pohovana"):
+        add("Jaja", 2, "piece")
+        add("Brašno", 150)
+        add("Prezle", 180)
+    if has(title, "rolnice"):
+        add("Sir", 150)
+    if has(title, "sosu"):
+        add("Pavlaka", 200, "ml")
+    if has(title, "pita", "gibanica") and not has(title, "pita sa jabuk"):
+        add("Maslinovo ulje", 70)
+        add("Voda", 180, "ml")
+    if has(title, "satar", "đuveč"):
+        add("Luk", 150)
+        add("Beli luk", 10)
+    if has(title, "grilovan", "ražnjići"):
+        add("Limun", 80)
+    if has(title, "jaja na oko"):
+        add("Paradajz", 250)
+    if has(title, "omlet"):
+        add("Maslinovo ulje", 15)
     return main_lines + additions
 
 
